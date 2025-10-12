@@ -15,7 +15,8 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   price: { type: Number, required: true },
-  category: { type: String, required: true, index: true }
+  category: { type: String, required: true, index: true },
+  rating: { type: Number, default: 0, min: 0, max: 5 },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

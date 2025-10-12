@@ -11,11 +11,11 @@ const { auth, isAdmin } = require('../middleware/auth');
  */
 router.post('/admin/products', auth, isAdmin, async (req, res) => {
   try {
-    const { title, description, images, price, category } = req.body;
-    if (!title || !description || !images || !price || !category) {
+    const { title, description, images, price, category,rating } = req.body;
+    if (!title || !description || !images || !price || !category || !rating) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
-    const product = await Product.create({ title, description, images, price, category });
+    const product = await Product.create({ title, description, images, price, category,rating });
     res.status(201).json(product);
   } catch (err) {
     res.status(400).json({ message: err.message });
