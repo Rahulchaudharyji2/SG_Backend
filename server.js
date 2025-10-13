@@ -9,7 +9,7 @@ const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173' || process.env.frontend_url],
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     credentials: true,
 }));
