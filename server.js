@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const adminRoutes = require('./routes/adminRoutes');
 const productRoutes = require('./routes/productRoutes');
+ const orderRoutes = require('./routes/orderRoutes');
 
 const app = express();
 
@@ -60,8 +61,26 @@ mongoose
   .catch((err) => console.error('MongoDB connection error', err));
 
 // Routes
+app.post(
+  '/orders/razorpay/webhook',
+  express.raw({ type: 'application/json' }),
+  (req, res) => {
+    // attach rawBody string (used by the controller to compute HMAC)
+    req.rawBody = req.body.toString();
+    try {
+      // attempt to parse JSON so controller can read payload easily as req.body
+      req.body = JSON.parse(req.rawBody);
+    } catch (e) {
+      req.body = {};
+    }
+    // call the controller handler (ensure controllers/orderController.js exports razorpayWebhook)
+    require('./controllers/orderController').razorpayWebhook(req, res);
+  }
+);
+
 app.use('/admin', adminRoutes);     // admin signup/login and admin product actions
 app.use('/products', productRoutes); // public product get/search
+app.use('/orders', orderRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
